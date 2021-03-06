@@ -2,6 +2,14 @@ let map;
 var directionsService;
 var directionsRenderer;
 var geocoder;
+var API_KEY = '753ad43c3b0a6502b5b443cab998a11e';
+const weatherIntervals = {
+    CURRENT: "current",
+    MINUTELY: "minutely",
+    HOURLY: "hourly",
+    DAILY: "daily"
+}
+
 
 function initMap() {
     geocoder = new google.maps.Geocoder();
@@ -12,6 +20,8 @@ function initMap() {
         zoom: 8,
     });
     directionsRenderer.setMap(map);
+
+    getWeather(0,0,weatherIntervals.CURRENT);
 }
 
 function calcRoute(event) {
@@ -34,8 +44,28 @@ function calcRoute(event) {
     };
     directionsService.route(request, function (result, status) {
         if (status == 'OK') {
+            console.log(result);
             directionsRenderer.setDirections(result);
         }
+    });
+}
+
+function getWeather(lat, lon, interval) {
+    var intervalsToExclude = [weatherIntervals.CURRENT, weatherIntervals.MINUTELY, weatherIntervals.HOURLY, weatherIntervals.DAILY]
+
+    const index = intervalsToExclude.indexOf(interval);
+    if (index > -1) {
+        intervalsToExclude.splice(index, 1);
+    }
+
+    var fullURL = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=${intervalsToExclude}&appid=${API_KEY}`;
+    //console.log(fullURL);
+    fetch(fullURL)
+    .then(function(response) {
+      return response.json();
+    }).then(function(json) {
+      //console.log(json);
+      return json;
     });
 }
 
