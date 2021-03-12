@@ -1,6 +1,4 @@
 const tiles = document.getElementsByClassName("tile-header");
-console.log("It's working")
-console.log(tiles);
 
 for (let i = 0; i < tiles.length; i++) {
     tiles[i].addEventListener("click", function() {
