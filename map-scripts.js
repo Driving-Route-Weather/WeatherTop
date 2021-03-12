@@ -120,7 +120,7 @@ function getWeather(latlon, duration, city) {
     //     intervalsToExclude.splice(index, 1);
     // }
 
-    var fullURL = `https://api.openweathermap.org/data/2.5/onecall?lat=${latlon.lat()}&lon=${latlon.lng()}&exclude=${intervalsToExclude}&appid=${WEATHER_API_KEY}`;
+    var fullURL = `https://api.openweathermap.org/data/2.5/onecall?lat=${latlon.lat()}&lon=${latlon.lng()}&units=imperial&exclude=${intervalsToExclude}&appid=${WEATHER_API_KEY}`;
     fetch(fullURL)
     .then(function(response) {
       return response.json();
