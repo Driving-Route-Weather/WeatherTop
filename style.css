@@ -93,13 +93,26 @@ body {
     max-height: 665px;
 }
 
+/* Hide scrollbar for Chrome, Safari and Opera */
+#location-list-container::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+#location-list-container {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
 .city-tile {
-    height: 90px;
+    height: auto;
     width: auto;
     border-radius: 6px;
     background-color: #343434;
     margin: 4px;
     color: #D7D7D7;
+    position: relative;
+    user-select: none;
 }
 
 .active, .city-tile:hover {
@@ -110,6 +123,7 @@ body {
     display: grid;
     grid-template-columns: 1fr 90px;
     grid-template-rows: 2fr 3fr;
+    height: 90px;
 }
 
 .city-tile .tile-header * {
