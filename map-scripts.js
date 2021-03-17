@@ -29,7 +29,7 @@ function initMap() {
     directionsRenderer.setMap(map);
 }
 
-async function getCurrentPosition() {
+function getCurrentPosition() {
 /*****************************************************************************/
     //code used for panning to the current location on the map
     infoWindow = new google.maps.InfoWindow();
@@ -56,15 +56,20 @@ async function getCurrentPosition() {
       // Browser doesn't support Geolocation
       handleLocationError(false, infoWindow, map.getCenter());
     }
-    return;
+    var pos124;
+    return new Promise(function(resolve, reject) {
+      pos124 = currentPosLat + "," + currentPosLon;
+      resolve(pos124);
+    });
 /*****************************************************************************/
 };
 
 async function useCurPosAsOrigin() {
-    await getCurrentPosition();
-    var tempText = currentPosLat + "," + currentPosLon;
+    var pos123 = await getCurrentPosition();
+    if(pos123 !== "undefined,undefined") {
     var tempSomething = document.getElementById("origin");
-    tempSomething.value = tempText;
+    tempSomething.value = pos123;
+    }
     //alert("button clicked");
 };
 
