@@ -4,6 +4,7 @@
 <head>
     <title>Weathertop</title>
     <link rel="stylesheet" href="style.css">
+    <script src="WeatherObject.js"></script>
     <script src="map-scripts.js"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -34,46 +35,11 @@
                 <div class="list-title">
                     Cities
                 </div>
-                <div class="city-list">
-                    <div class="city-tile">
-                        <div class="tile-header">
-                            <div class="city">Twin Falls, ID</div>
-                            <div class="time">1:36 pm</div>
-                            <div class="temp">
-                                35°
-                                <img src="http://openweathermap.org/img/wn/10d.png"/>
-                            </div>
-                            <div class="arrow">
-                                <img class="expand-arrow-icon" src="expand-arrow.svg" alt="Expand arrow">
-                            </div>
-                        </div>
-                        <div class="tile-contents">
-                            <p>Stuff</p>
-                            <p>Stuff</p>
-                            <p>Stuff</p>
-                            <p>Stuff</p>
-                        </div>
-                    </div>
-                    <div class="city-tile">
-                        <div class="tile-header">
-                            <div class="city">Twin Falls, ID</div>
-                            <div class="time">1:36 pm</div>
-                            <div class="temp">35°</div>
-                            <div class="arrow">
-                                <img class="expand-arrow-icon" src="expand-arrow.svg" alt="Expand arrow">
-                            </div>
-                        </div>
-                        <div class="tile-contents">
-                            <p>Stuff</p>
-                            <p>Stuff</p>
-                            <p>Stuff</p>
-                            <p>Stuff</p>
-                        </div>
-                    </div>
-                </div>
+                <div class="city-list"></div>
             </div>
         </div>
     </div>
 </body>
 <script src="expand-tile.js"></script>
+
 </html>

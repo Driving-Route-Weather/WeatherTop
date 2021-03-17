@@ -138,6 +138,8 @@ body {
     font-weight: 700;
     font-size: 1.2em;
     padding: 0 8px;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .city-tile .tile-header .time {
@@ -156,6 +158,10 @@ body {
     padding: 0 8px;
 }
 
+.city-tile .tile-header .temp img {
+    width: 45px;
+}
+
 .city-tile .tile-header .arrow {
     justify-content: center;
     grid-row: 2;
@@ -172,6 +178,11 @@ body {
     background-color: #424242;
 }
 
+.city-tile .tile-contents p {
+    font-size: 13px;
+    margin: 6px 0;
+}
+
 .list-title {
     height: 45px;
     width: auto;
@@ -181,8 +192,4 @@ body {
     font-weight: 700;
     font-size: 1.5em;
 }
-
-.city-list {
-}
-
 
