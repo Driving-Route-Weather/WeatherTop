@@ -2,6 +2,10 @@ let map;
 var directionsService;
 var directionsRenderer;
 var geocoder;
+var currentPosLat;
+var currentPosLon;
+var gotCurrentLoc;
+
 
 // change this to adjust the number of cities/locations sampled for weather data
 var CITIES_LENGTH = 5;
@@ -13,7 +17,6 @@ const weatherIntervals = {
     DAILY: "daily"
 }
 
-
 function initMap() {
     geocoder = new google.maps.Geocoder();
     directionsService = new google.maps.DirectionsService();
@@ -22,8 +25,48 @@ function initMap() {
         center: { lat: -34.397, lng: 150.644 },
         zoom: 8,
     });
+    
     directionsRenderer.setMap(map);
 }
+
+async function getCurrentPosition() {
+/*****************************************************************************/
+    //code used for panning to the current location on the map
+    infoWindow = new google.maps.InfoWindow();
+    // Try HTML5 geolocation.
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const pos = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          };
+          currentPosLat = position.coords.latitude;
+          currentPosLon = position.coords.longitude;
+          infoWindow.setPosition(pos);
+          infoWindow.setContent("Location found.");
+          infoWindow.open(map);
+          map.setCenter(pos);
+        },
+        () => {
+          handleLocationError(true, infoWindow, map.getCenter());
+        }
+      );      
+    } else {
+      // Browser doesn't support Geolocation
+      handleLocationError(false, infoWindow, map.getCenter());
+    }
+    return;
+/*****************************************************************************/
+};
+
+async function useCurPosAsOrigin() {
+    await getCurrentPosition();
+    var tempText = currentPosLat + "," + currentPosLon;
+    var tempSomething = document.getElementById("origin");
+    tempSomething.value = tempText;
+    //alert("button clicked");
+};
 
 function calcRoute(event) {
     event.preventDefault();
@@ -133,9 +176,12 @@ function getWeather(latlon, duration, city) {
 
 // callback for each individual weather api call
 function onWeatherRecieved(response) {
-    console.log(response);
+  console.log(response);
 }
+
 
 window.onload = () => {
     document.getElementById('travel-form').addEventListener('submit', calcRoute);
+    document.getElementById('currentPositionBtn').addEventListener('click', getCurrentPosition);
+    document.getElementById('currentOriginBtn').addEventListener('click', useCurPosAsOrigin);
 }
