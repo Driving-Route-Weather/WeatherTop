@@ -121,6 +121,9 @@ function calcRoute(event) {
             console.log(result.routes[0].legs[0].end_location);
             getWeatherPrep(result, result.routes[0].legs[0].end_location);
         }
+        else {
+          alert("No Route Found!!");
+        }
     });
 }
 
