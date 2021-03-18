@@ -43,52 +43,21 @@ function getCurrentPosition(callback) {
         infoWindow.setContent("Location found.");
         infoWindow.open(map);
         map.setCenter(currLocation);
-        //handleLocationError(true, infoWindow, map.getCenter());
         console.log(currLocation);
         callback(currLocation);
-      });
-      // navigator.geolocation.getCurrentPosition(
-      //   (position) => {
-      //     const pos = {
-      //       lat: position.coords.latitude,
-      //       lng: position.coords.longitude,
-      //     };
-      //     currentPosLat = position.coords.latitude;
-      //     currentPosLon = position.coords.longitude;
-      //     infoWindow.setPosition(pos);
-      //     infoWindow.setContent("Location found.");
-      //     infoWindow.open(map);
-      //     map.setCenter(pos);
-      //   },
-      //   () => {
-      //     handleLocationError(true, infoWindow, map.getCenter());
-      //   }
-      // );      
+      });      
     } else {
       // Browser doesn't support Geolocation
       handleLocationError(false, infoWindow, map.getCenter());
     }
-    // var pos124;
-    // return new Promise(function(resolve, reject) {
-    //   pos124 = currentPosLat + "," + currentPosLon;
-    //   resolve(pos124);
-    // });
 /*****************************************************************************/
 };
 
 function useCurPosAsOrigin() {
   getCurrentPosition(function(loc) {
-    var tempSomething = document.getElementById("origin");
-    var tempString = currentPosLat + "," + currentPosLon;
-    //var result = loc.latitude + "," + loc.longitude;
-    tempSomething.value = tempString;
+    var textField = document.getElementById("origin");
+    textField.value = currentPosLat + "," + currentPosLon;
   });
-    // var pos123 = await getCurrentPosition();
-    // if(pos123 !== "undefined,undefined") {
-    // var tempSomething = document.getElementById("origin");
-    // tempSomething.value = pos123;
-    // }
-    //alert("button clicked");
 };
 
 function calcRoute(event) {
