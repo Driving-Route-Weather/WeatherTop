@@ -3,8 +3,22 @@ class WeatherObject {
         this.durationInt = durationInt;
         this.jsonObject = jsonObject;
         this.departTime = departTime;
+        this.locationTime = new Date(departTime.getTime() + (durationInt * 60000));
     }
 
+    formatTime() {
+        var hours = this.locationTime.getHours();
+        var minutes = this.locationTime.getMinutes();
+        var ampm = hours >= 12 ? "pm" : "am";
+        hours %= 12;
+        // The hour 0 should be 12
+        hours = hours ? hours : 12;
+        minutes = minutes < 10 ? '0' + minutes : minutes;
+        return hours + ":" + minutes + ' ' + ampm;
+    }
+
+    // TODO: grab weather things from the correct time frame. It is only
+    // grabbing the current weather data
     getHTMLObject() {
         // Create the city tile
         var cityTile = document.createElement("div");
@@ -23,7 +37,7 @@ class WeatherObject {
         // Create the time
         toAppend = document.createElement("div");
         toAppend.className = "time";
-        toAppend.appendChild(document.createTextNode("Fill in"));
+        toAppend.appendChild(document.createTextNode(this.formatTime()));
         tileHeader.appendChild(toAppend);
 
         // Create the temp and weather icon
