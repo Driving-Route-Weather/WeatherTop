@@ -4,42 +4,54 @@
 <head>
     <title>Weathertop</title>
     <link rel="stylesheet" href="style.css">
+    <script src="WeatherObject.js"></script>
     <script src="map-scripts.js"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
-    <div class="top-nav">
-        <span class="title">Weathertop</span>
-    </div>
-    <div class="page-contents">
-        <div class="map-input">
-            <form id="travel-form">
-                <!-- something to put in, possible some examples so that people  -->
-                <!-- know how to fill in everything (orgin, destination, time format) -->
-                <input type="text" id="origin" name="origin" placeholder="Where from?" required>
-                <img class="right-arrow-icon" src="right-arrow.svg" alt="Right arrow">
-                <input type="text" id="destination" name="destination" placeholder="Where to?" required>
-                <input type="text" id="start-time" name="start-time" placeholder="When?"
-                    onfocus="(this.type='datetime-local')">
-                <input type="submit" form="travel-form" id="submit-button" value="Go">
-            </form>
+    <div class="container">
+        <div class="top-nav">
+            <span class="title">Weathertop</span>
         </div>
-        <div class="current-position">
-            <form id="currentPosition">
-                <input id="currentPositionBtn" type="button" name="currentPositionBtn" value="Click for Current Position"/>
-            </form>            
-        </div>    
-        <div class="current-origin">
-            <form id="currentOrigin">
-                <input id="currentOriginBtn" type="button" name="currentOriginBtn" value="Click to Use Current Position as Origin"/>
-            </form>            
-        </div>      
-        <div id="map"></div>
-        <script
-            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBIwzALxUPNbatRBj3Xi1Uhp0fFzwWNBkE&callback=initMap&libraries=&v=weekly"
-            async></script>
-        <div class="location-list">This is the list</div>
+        <div class="page-contents">
+            <div class="map-input">
+                <form id="travel-form">
+                    <!-- something to put in, possible some examples so that people  -->
+                    <!-- know how to fill in everything (orgin, destination, time format) -->
+                    <input type="text" id="origin" name="origin" placeholder="Where from?" required>
+                    <img class="right-arrow-icon" src="right-arrow.svg" alt="Right arrow">
+                    <input type="text" id="destination" name="destination" placeholder="Where to?" required>
+                    <input type="text" id="start-time" name="start-time" placeholder="When?"
+                        onfocus="(this.type='datetime-local')">
+                    <input type="submit" form="travel-form" id="submit-button" value="Go">
+                </form>
+            </div>
+            <div class="current-position">
+                <form id="currentPosition">
+                    <input id="currentPositionBtn" type="button" name="currentPositionBtn"
+                        value="Click for Current Position" />
+                </form>
+            </div>
+            <div class="current-origin">
+                <form id="currentOrigin">
+                    <input id="currentOriginBtn" type="button" name="currentOriginBtn"
+                        value="Click to Use Current Position as Origin" />
+                </form>
+            </div>
+            <div id="map"></div>
+            <script
+                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBIwzALxUPNbatRBj3Xi1Uhp0fFzwWNBkE&callback=initMap&libraries=&v=weekly"
+                async></script>
+            <div id="location-list-container">
+                <div class="list-title">
+                    Cities
+                </div>
+                <div class="city-list"></div>
+            </div>
+        </div>
     </div>
 </body>
 
