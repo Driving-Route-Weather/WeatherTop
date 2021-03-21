@@ -24,9 +24,18 @@ function initMap() {
     directionsService = new google.maps.DirectionsService();
     directionsRenderer = new google.maps.DirectionsRenderer();
     map = new google.maps.Map(document.getElementById("map"), {
-        center: { lat: -34.397, lng: 150.644 },
-        zoom: 8,
+        center: { lat: 40, lng: -95 },
+        zoom: 4,
     });
+
+    var radar = new google.maps.ImageMapType({
+        getTileUrl: function(coord, zoom) {
+            return ['https://maps.aerisapi.com/xszcxHazxBDdehEW8rQYS_5LiWSkqrjJeD76K0PllSYnzYhb7kDTOMCuyuBxil/radar/',
+                zoom, '/', coord.x, '/', coord.y, '/current.png'].join('');
+        },
+        tileSize: new google.maps.Size(256, 256)
+    });
+    map.overlayMapTypes.push(radar);
 
     directionsRenderer.setMap(map);
 }
