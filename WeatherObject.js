@@ -6,6 +6,23 @@ class WeatherObject {
         this.locationTime = new Date(departTime.getTime() + (durationInt * 60000));
     }
 
+    getLatLong() {
+        return { lat: this.jsonObject.lat, lng: this.jsonObject.lon };
+    }
+
+    getWeatherIcon() {
+        return "http://openweathermap.org/img/wn/" + this.jsonObject.current.weather[0].icon + "@2x.png";
+    }
+
+    getIconClickInfo() {
+        var clickInfo = "<p>" + this.jsonObject.city + "<br />";
+        var description = (this.jsonObject.current.weather[0].description);
+        description = description.charAt(0).toUpperCase() + description.substring(1);
+        clickInfo = clickInfo + description;
+        clickInfo = clickInfo + "</p>";
+        return clickInfo;
+    }
+
     formatTime() {
         var hours = this.locationTime.getHours();
         var minutes = this.locationTime.getMinutes();
@@ -47,7 +64,7 @@ class WeatherObject {
         // The char code for the degree symbol is 176
         toAppend.appendChild(document.createTextNode(temp.toString() + String.fromCharCode(176)));
         var weatherIcon = document.createElement("img");
-        weatherIcon.src = "http://openweathermap.org/img/wn/" + this.jsonObject.current.weather[0].icon + "@2x.png";
+        weatherIcon.src = this.getWeatherIcon();
         toAppend.appendChild(weatherIcon);
         tileHeader.appendChild(toAppend);
 
@@ -68,7 +85,7 @@ class WeatherObject {
         var tileContents = document.createElement("div");
         tileContents.className = "tile-contents";
 
-        //Create wind speed
+        // Create wind speed
         toAppend = document.createElement("p");
         var description = (this.jsonObject.current.weather[0].description);
         description = description.charAt(0).toUpperCase() + description.substring(1);

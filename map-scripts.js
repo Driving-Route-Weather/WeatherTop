@@ -5,6 +5,7 @@ var geocoder;
 var currentPosLat;
 var currentPosLon;
 var gotCurrentLoc;
+var infoWindow;
 
 
 // change this to adjust the number of cities/locations sampled for weather data
@@ -23,6 +24,7 @@ function initMap() {
     geocoder = new google.maps.Geocoder();
     directionsService = new google.maps.DirectionsService();
     directionsRenderer = new google.maps.DirectionsRenderer();
+    infoWindow = new google.maps.InfoWindow();
     map = new google.maps.Map(document.getElementById("map"), {
         center: { lat: -34.397, lng: 150.644 },
         zoom: 8,
@@ -101,6 +103,7 @@ function calcRoute(event) {
                 duration = getWeatherFromLatLon(event, latlon);
             }
             console.log(result.routes[0].legs[0].end_location);
+            getStartingWeatherPrep(result, result.routes[0].legs[0].start_location)
             getWeatherPrep(result, result.routes[0].legs[0].end_location);
         }
     });
@@ -147,6 +150,12 @@ function getReverseGeocoding(latlon) {
             location = json.address_components.filter(getPoliticalTypes)[0];
             return location;
         });
+}
+
+function getStartingWeatherPrep(routeResult, latlon) {
+    var duration_result = '0 hours 0 mins';
+    var city_result = routeResult.routes[0].legs[0].start_address;
+    getWeather(latlon, duration_result, city_result);
 }
 
 function getWeatherPrep(routeResult, latlon) {
@@ -209,7 +218,7 @@ function parseWeatherResponse(response) {
 // callback for each individual weather api call
 function onWeatherRecieved(response) {
     parseWeatherResponse(response);
-    if (locationWeatherObjects.length == CITIES_LENGTH) {
+    if (locationWeatherObjects.length == CITIES_LENGTH + 1) {
         locationWeatherObjects.sort(function (a, b) {
             if (a.durationInt > b.durationInt) {
                 return 1;
@@ -221,7 +230,16 @@ function onWeatherRecieved(response) {
         });
         locationWeatherObjects.forEach(function (item, index) {
             document.getElementsByClassName("city-list")[0].appendChild(item.getHTMLObject());
+            var marker = new google.maps.Marker({
+                position: item.getLatLong(),
+                map: map,
+            });
+            google.maps.event.addListener(marker, 'click', function () {
+                infoWindow.setContent(item.getIconClickInfo());
+                infoWindow.open(map, marker);
+            })
         });
+
         console.log(locationWeatherObjects);
     }
 }
