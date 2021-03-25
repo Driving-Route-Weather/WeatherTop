@@ -5,6 +5,7 @@ var geocoder;
 var currentPosLat;
 var currentPosLon;
 var gotCurrentLoc;
+var infoWindow;
 
 
 // change this to adjust the number of cities/locations sampled for weather data
@@ -23,6 +24,7 @@ function initMap() {
     geocoder = new google.maps.Geocoder();
     directionsService = new google.maps.DirectionsService();
     directionsRenderer = new google.maps.DirectionsRenderer();
+    infoWindow = new google.maps.InfoWindow();
     map = new google.maps.Map(document.getElementById("map"), {
         center: { lat: -34.397, lng: 150.644 },
         zoom: 8,
@@ -31,29 +33,23 @@ function initMap() {
     directionsRenderer.setMap(map);
 }
 
-async function getCurrentPosition() {
-    /*****************************************************************************/
+function getCurrentPosition(callback) {
+/*****************************************************************************/
     //code used for panning to the current location on the map
     infoWindow = new google.maps.InfoWindow();
     // Try HTML5 geolocation.
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                const pos = {
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude,
-                };
-                currentPosLat = position.coords.latitude;
-                currentPosLon = position.coords.longitude;
-                infoWindow.setPosition(pos);
-                infoWindow.setContent("Location found.");
-                infoWindow.open(map);
-                map.setCenter(pos);
-            },
-            () => {
-                handleLocationError(true, infoWindow, map.getCenter());
-            }
-        );
+      navigator.geolocation.getCurrentPosition(function(position){
+        var currLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+        currentPosLat = position.coords.latitude;
+        currentPosLon = position.coords.longitude;
+        infoWindow.setPosition(currLocation);
+        infoWindow.setContent("Location found.");
+        infoWindow.open(map);
+        map.setCenter(currLocation);
+        console.log(currLocation);
+        callback(currLocation);
+      });     
     } else {
         // Browser doesn't support Geolocation
         handleLocationError(false, infoWindow, map.getCenter());
@@ -62,12 +58,11 @@ async function getCurrentPosition() {
     /*****************************************************************************/
 };
 
-async function useCurPosAsOrigin() {
-    await getCurrentPosition();
-    var tempText = currentPosLat + "," + currentPosLon;
-    var tempSomething = document.getElementById("origin");
-    tempSomething.value = tempText;
-    //alert("button clicked");
+function useCurPosAsOrigin() {
+  getCurrentPosition(function(loc) {
+    var textField = document.getElementById("origin");
+    textField.value = currentPosLat + "," + currentPosLon;
+  });
 };
 
 function calcRoute(event) {
@@ -101,7 +96,11 @@ function calcRoute(event) {
                 duration = getWeatherFromLatLon(event, latlon);
             }
             console.log(result.routes[0].legs[0].end_location);
+            getStartingWeatherPrep(result, result.routes[0].legs[0].start_location)
             getWeatherPrep(result, result.routes[0].legs[0].end_location);
+        }
+        else {
+          alert("No Route Found!!");
         }
     });
 }
@@ -147,6 +146,12 @@ function getReverseGeocoding(latlon) {
             location = json.address_components.filter(getPoliticalTypes)[0];
             return location;
         });
+}
+
+function getStartingWeatherPrep(routeResult, latlon) {
+    var duration_result = '0 hours 0 mins';
+    var city_result = routeResult.routes[0].legs[0].start_address;
+    getWeather(latlon, duration_result, city_result);
 }
 
 function getWeatherPrep(routeResult, latlon) {
@@ -209,7 +214,7 @@ function parseWeatherResponse(response) {
 // callback for each individual weather api call
 function onWeatherRecieved(response) {
     parseWeatherResponse(response);
-    if (locationWeatherObjects.length == CITIES_LENGTH) {
+    if (locationWeatherObjects.length == CITIES_LENGTH + 1) {
         locationWeatherObjects.sort(function (a, b) {
             if (a.durationInt > b.durationInt) {
                 return 1;
@@ -221,7 +226,16 @@ function onWeatherRecieved(response) {
         });
         locationWeatherObjects.forEach(function (item, index) {
             document.getElementsByClassName("city-list")[0].appendChild(item.getHTMLObject());
+            var marker = new google.maps.Marker({
+                position: item.getLatLong(),
+                map: map,
+            });
+            google.maps.event.addListener(marker, 'click', function () {
+                infoWindow.setContent(item.getIconClickInfo());
+                infoWindow.open(map, marker);
+            })
         });
+
         console.log(locationWeatherObjects);
     }
 }
