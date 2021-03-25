@@ -33,29 +33,23 @@ function initMap() {
     directionsRenderer.setMap(map);
 }
 
-async function getCurrentPosition() {
-    /*****************************************************************************/
+function getCurrentPosition(callback) {
+/*****************************************************************************/
     //code used for panning to the current location on the map
     infoWindow = new google.maps.InfoWindow();
     // Try HTML5 geolocation.
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                const pos = {
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude,
-                };
-                currentPosLat = position.coords.latitude;
-                currentPosLon = position.coords.longitude;
-                infoWindow.setPosition(pos);
-                infoWindow.setContent("Location found.");
-                infoWindow.open(map);
-                map.setCenter(pos);
-            },
-            () => {
-                handleLocationError(true, infoWindow, map.getCenter());
-            }
-        );
+      navigator.geolocation.getCurrentPosition(function(position){
+        var currLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+        currentPosLat = position.coords.latitude;
+        currentPosLon = position.coords.longitude;
+        infoWindow.setPosition(currLocation);
+        infoWindow.setContent("Location found.");
+        infoWindow.open(map);
+        map.setCenter(currLocation);
+        console.log(currLocation);
+        callback(currLocation);
+      });     
     } else {
         // Browser doesn't support Geolocation
         handleLocationError(false, infoWindow, map.getCenter());
@@ -64,12 +58,11 @@ async function getCurrentPosition() {
     /*****************************************************************************/
 };
 
-async function useCurPosAsOrigin() {
-    await getCurrentPosition();
-    var tempText = currentPosLat + "," + currentPosLon;
-    var tempSomething = document.getElementById("origin");
-    tempSomething.value = tempText;
-    //alert("button clicked");
+function useCurPosAsOrigin() {
+  getCurrentPosition(function(loc) {
+    var textField = document.getElementById("origin");
+    textField.value = currentPosLat + "," + currentPosLon;
+  });
 };
 
 function calcRoute(event) {
@@ -105,6 +98,9 @@ function calcRoute(event) {
             console.log(result.routes[0].legs[0].end_location);
             getStartingWeatherPrep(result, result.routes[0].legs[0].start_location)
             getWeatherPrep(result, result.routes[0].legs[0].end_location);
+        }
+        else {
+          alert("No Route Found!!");
         }
     });
 }
