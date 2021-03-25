@@ -21,10 +21,10 @@
                 <form id="travel-form">
                     <!-- something to put in, possible some examples so that people  -->
                     <!-- know how to fill in everything (orgin, destination, time format) -->
-                    <input type="text" id="origin" name="origin" placeholder="Where from?" required>
+                    <input type="text" id="origin" name="origin" maxlength="200" placeholder="Where from?" required>
                     <img class="right-arrow-icon" src="right-arrow.svg" alt="Right arrow">
-                    <input type="text" id="destination" name="destination" placeholder="Where to?" required>
-                    <input type="text" id="start-time" name="start-time" placeholder="When?"
+                    <input type="text" id="destination" name="destination" maxlength="200" placeholder="Where to?" required>
+                    <input type="text" id="start-time" name="start-time" maxlength="200" placeholder="When?"
                         onfocus="(this.type='datetime-local')">
                     <input type="submit" form="travel-form" id="submit-button" value="Go">
                 </form>
