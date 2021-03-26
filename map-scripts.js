@@ -6,6 +6,7 @@ var currentPosLat;
 var currentPosLon;
 var gotCurrentLoc;
 var infoWindow;
+var markers;
 
 
 // change this to adjust the number of cities/locations sampled for weather data
@@ -25,6 +26,7 @@ function initMap() {
     directionsService = new google.maps.DirectionsService();
     directionsRenderer = new google.maps.DirectionsRenderer();
     infoWindow = new google.maps.InfoWindow();
+    markers = [];
     map = new google.maps.Map(document.getElementById("map"), {
         center: { lat: -34.397, lng: 150.644 },
         zoom: 8,
@@ -34,22 +36,22 @@ function initMap() {
 }
 
 function getCurrentPosition(callback) {
-/*****************************************************************************/
+    /*****************************************************************************/
     //code used for panning to the current location on the map
     infoWindow = new google.maps.InfoWindow();
     // Try HTML5 geolocation.
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(function(position){
-        var currLocation = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
-        currentPosLat = position.coords.latitude;
-        currentPosLon = position.coords.longitude;
-        infoWindow.setPosition(currLocation);
-        infoWindow.setContent("Location found.");
-        infoWindow.open(map);
-        map.setCenter(currLocation);
-        console.log(currLocation);
-        callback(currLocation);
-      });     
+        navigator.geolocation.getCurrentPosition(function (position) {
+            var currLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+            currentPosLat = position.coords.latitude;
+            currentPosLon = position.coords.longitude;
+            infoWindow.setPosition(currLocation);
+            infoWindow.setContent("Location found.");
+            infoWindow.open(map);
+            map.setCenter(currLocation);
+            console.log(currLocation);
+            callback(currLocation);
+        });
     } else {
         // Browser doesn't support Geolocation
         handleLocationError(false, infoWindow, map.getCenter());
@@ -59,10 +61,10 @@ function getCurrentPosition(callback) {
 };
 
 function useCurPosAsOrigin() {
-  getCurrentPosition(function(loc) {
-    var textField = document.getElementById("origin");
-    textField.value = currentPosLat + "," + currentPosLon;
-  });
+    getCurrentPosition(function (loc) {
+        var textField = document.getElementById("origin");
+        textField.value = currentPosLat + "," + currentPosLon;
+    });
 };
 
 function calcRoute(event) {
@@ -86,6 +88,10 @@ function calcRoute(event) {
     };
     directionsService.route(request, function (result, status) {
         if (status == 'OK') {
+            markers.forEach(function (item, index) {
+                item.setMap(null);
+            });
+            markers = [];
             locationWeatherObjects = [];
             document.getElementsByClassName("city-list")[0].innerHTML = "";
             console.log(result);
@@ -100,7 +106,7 @@ function calcRoute(event) {
             getWeatherPrep(result, result.routes[0].legs[0].end_location);
         }
         else {
-          alert("No Route Found!!");
+            alert("No Route Found!!");
         }
     });
 }
@@ -230,6 +236,7 @@ function onWeatherRecieved(response) {
                 position: item.getLatLong(),
                 map: map,
             });
+            markers.push(marker);
             google.maps.event.addListener(marker, 'click', function () {
                 infoWindow.setContent(item.getIconClickInfo());
                 infoWindow.open(map, marker);
