@@ -34,7 +34,7 @@ function initMap() {
 
     var radar = new google.maps.ImageMapType({
         getTileUrl: function(coord, zoom) {
-            return ['https://maps.aerisapi.com/xszcxHazxBDdehEW8rQYS_5LiWSkqrjJeD76K0PllSYnzYhb7kDTOMCuyuBxil/radar/',
+            return ['https://maps.aerisapi.com/xszcxHazxBDdehEW8rQYS_5LiWSkqrjJeD76K0PllSYnzYhb7kDTOMCuyuBxil/satellite,fradar/',
                 zoom, '/', coord.x, '/', coord.y, '/current.png'].join('');
         },
         tileSize: new google.maps.Size(256, 256)
